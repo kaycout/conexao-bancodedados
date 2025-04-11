@@ -5,6 +5,9 @@ const express = require("express"); //ponto e vírgula é opcional
 //importar a biblioteca do mysql
 const mysql = require("mysql2");
 
+//importar a biblioteca do cors
+const cors = require("cors");
+
 // estabelecer conexao com o banco de dados mysql
 const con = mysql.createConnection({
     host:"127.0.0.1",
@@ -25,8 +28,11 @@ const app = express();
 
 //Carregar a função que manipula dados em formato JSON, ou seja, permite
 //ler, gravar, atualizar, deletar, enviar e receber dados em formato JSON
-
 app.use(express.json());
+
+
+//ativar o modulo do cors
+app.use(cors());
 
 // Primeira rota para listar os dados do banco:
 app.get("/listar",(req,res)=>{
@@ -47,7 +53,7 @@ app.post("/cadastrar", (req,res)=>{
             return res.status(500).send({erro:`Erro ao tentar cadastrar ${error}`});
         }
 
-        res.status(201).send({msg:`Cliente cadastrado`,playload:result}); // status code (201, por exemplo)
+        res.status(201).send({msg:`cliente cadastrado`,playload:result}); // status code (201, por exemplo)
     })
 
     
@@ -68,7 +74,7 @@ app.put("/atualizar/:id",(req,res)=>{
 app.delete("/apagar/:id",(req,res)=>{
     con.query("delete from cliente set ? where id=?",req.params.id,(error,result)=>{
         if(error){
-            return res.status(500).send({erro:`Cliente deletado ${error}`})
+            return res.status(500).send({erro:`cliente deletado ${error}`})
         }
         res.status(204).send({msg:'Dados deletados',id:req.params.id}) //pela url 
         })
